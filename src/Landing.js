@@ -42,7 +42,6 @@ function LandingPage({ setTweets }) {
   };
 
   const handleSubmit = (e) => {
-    const data = data.substring(1);
     e.preventDefault();
     console.log(
       "Submitted data",
@@ -62,9 +61,10 @@ function LandingPage({ setTweets }) {
     // check for hashtag
     if (/(?!\s)#[A-Za-z]\w*\b/g.test(data.user)) {
       console.log("Hashtag found !!!");
-
+      const sendData = { user: data.user.substring(1), num: `${data.num}` };
+      console.log("sendData", sendData);
       axios
-        .post("http://localhost:5000/api/hashtag", data, headers)
+        .post("http://localhost:5000/api/hashtag", sendData, headers)
         .then((res) => {
           if (res.status === 200) {
             console.log("success");
@@ -74,14 +74,13 @@ function LandingPage({ setTweets }) {
             console.log("newdata->", newdata);
 
             setTweets({ tweets: newdata });
+            history.push("/visualization");
           }
         })
         .catch((err) => {
           console.log("error");
           setError({ status: false, msg: "" });
         });
-
-      history.push("/visualization");
     }
 
     // check for username
@@ -91,9 +90,11 @@ function LandingPage({ setTweets }) {
       )
     ) {
       console.log("Username found !!!");
+      const sendData = { user: data.user.substring(1), num: `${data.num}` };
+      console.log("sendData", sendData);
 
       axios
-        .post("http://localhost:5000/api/sentiment", data, headers)
+        .post("http://localhost:5000/api/sentiment", sendData, headers)
         .then((res) => {
           if (res.status === 200) {
             console.log("success");
@@ -103,14 +104,13 @@ function LandingPage({ setTweets }) {
             console.log("newdata->", newdata);
 
             setTweets({ tweets: newdata });
+            history.push("/visualization");
           }
         })
         .catch((err) => {
           console.log("error");
           setError({ status: false, msg: "" });
         });
-
-      history.push("/visualization");
     } else {
       setError({
         status: true,
