@@ -69,11 +69,11 @@ function LandingPage({ setTweets }) {
           if (res.status === 200) {
             console.log("success");
 
-            let newdata = res.json();
+            // let newdata = res.json();
 
-            console.log("newdata->", newdata);
+            // console.log("newdata->", newdata);
 
-            setTweets({ tweets: newdata });
+            setTweets(newdata);
             history.push("/visualization");
           }
         })
@@ -99,16 +99,16 @@ function LandingPage({ setTweets }) {
           if (res.status === 200) {
             console.log("success");
 
-            let newdata = res.json();
+            // let newdata = res.json();
 
-            console.log("newdata->", newdata);
+            // console.log("newdata->", newdata);
 
-            setTweets({ tweets: newdata });
+            setTweets(newdata);
             history.push("/visualization");
           }
         })
         .catch((err) => {
-          console.log("error");
+          console.log("error", err);
           setError({ status: false, msg: "" });
         });
     } else {
