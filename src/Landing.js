@@ -24,16 +24,16 @@ function LandingPage({ setTweets }) {
   });
 
   const handleChange = (e) => {
-    let { name, value } = e.target;
+    const { name, value } = e.target;
 
     console.log("hey change");
     // console.log(e.target);
     // console.log(e.target.value);
     // console.log(data);
 
-    value = value.substring(1);
+    //value = value.substring(1);
 
-    console.log("value being sent->", value);
+    //console.log("value being sent->", value);
 
     setData({
       ...data,
@@ -42,6 +42,7 @@ function LandingPage({ setTweets }) {
   };
 
   const handleSubmit = (e) => {
+    const data = data.substring(1);
     e.preventDefault();
     console.log(
       "Submitted data",
