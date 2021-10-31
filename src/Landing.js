@@ -13,9 +13,10 @@ import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 
 import axios from "axios";
-import { Redirect, NavLink } from "react-router";
+import { Redirect, Link, useHistory } from "react-router-dom";
 
-function LandingPage() {
+function LandingPage({ setTweets }) {
+  const history = useHistory();
   const [error, setError] = useState({ status: false, msg: "" });
   const [data, setData] = useState({
     user: "",
@@ -23,12 +24,17 @@ function LandingPage() {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
 
-    //console.log("hey change");
+    console.log("hey change");
     // console.log(e.target);
     // console.log(e.target.value);
     // console.log(data);
+
+    value = value.substring(1);
+
+    console.log("value being sent->", value);
+
     setData({
       ...data,
       [name]: value,
@@ -37,12 +43,44 @@ function LandingPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted data", data);
+    console.log(
+      "Submitted data",
+      data,
+      "To lowercase",
+      data.user.toLowerCase()
+    );
+
+    // const endpoint = ;
+    const headers = {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        "Content-Type": "application/json",
+      },
+    };
 
     // check for hashtag
-    if (/(?!\s)#([A-Za-z]|\d[A-Za-z])\w*\b/g.test(data.user)) {
+    if (/(?!\s)#[A-Za-z]\w*\b/g.test(data.user)) {
       console.log("Hashtag found !!!");
-      setError({ status: false, msg: "" });
+
+      axios
+        .post("http://localhost:5000/api/hashtag", data, headers)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log("success");
+
+            let newdata = res.json();
+
+            console.log("newdata->", newdata);
+
+            setTweets({ tweets: newdata });
+          }
+        })
+        .catch((err) => {
+          console.log("error");
+          setError({ status: false, msg: "" });
+        });
+
+      history.push("/visualization");
     }
 
     // check for username
@@ -52,21 +90,32 @@ function LandingPage() {
       )
     ) {
       console.log("Username found !!!");
-      setError({ status: false, msg: "" });
+
+      axios
+        .post("http://localhost:5000/api/sentiment", data, headers)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log("success");
+
+            let newdata = res.json();
+
+            console.log("newdata->", newdata);
+
+            setTweets({ tweets: newdata });
+          }
+        })
+        .catch((err) => {
+          console.log("error");
+          setError({ status: false, msg: "" });
+        });
+
+      history.push("/visualization");
     } else {
       setError({
         status: true,
-        msg: "Invalid use @ or # before",
+        msg: "Invalid! Use @ or # before",
       });
     }
-
-    const endpoint = "http://localhost:5000/api/sentiment";
-    const headers = {
-      headers: {
-        // Overwrite Axios's automatically set Content-Type
-        "Content-Type": "application/json",
-      },
-    };
 
     // axios
     //   .post(endpoint, data, headers)
@@ -75,14 +124,6 @@ function LandingPage() {
     //       console.log("success");
 
     //       let newdata = res.json();
-    //       return (
-    //         <NavLink
-    //           to={{
-    //             pathname: "/visualization",
-    //             aboutProp: { mode: newdata }
-    //           }}
-    //         ></NavLink>
-    //       );
     //     }
     //   })
     //   .catch((err) => {
@@ -103,7 +144,7 @@ function LandingPage() {
         <h3>Enter the username to search</h3>
         <form className="forms" id="contact-form">
           <Box
-            component="form"
+            // component="form"
             sx={{
               "& > :not(style)": { m: 1, width: "30ch" },
             }}
@@ -116,7 +157,6 @@ function LandingPage() {
               name="user"
               label="Enter @username or #hashtag"
               variant="outlined"
-              //color="primary"
               value={data.user}
               helperText={error.msg}
               onChange={handleChange}
@@ -131,9 +171,8 @@ function LandingPage() {
               onChange={handleChange}
               valueLabelDisplay="auto"
               aria-label="Default"
-              // aria-labelledby="non-linear-slider"
             />
-            <Stack spacing={2} direction="row">
+            <Stack spacing={2} direction="row" justifyContent="center">
               <Button
                 onClick={handleSubmit}
                 type="submit"
@@ -143,9 +182,6 @@ function LandingPage() {
                 submit
               </Button>
             </Stack>
-
-            {/* <TextField id="filled-basic" label="Filled" variant="filled" />
-          <TextField id="standard-basic" label="Standard" variant="standard" /> */}
           </Box>
         </form>
       </Grid>
