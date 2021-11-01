@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import LandingPage from "./Landing";
 import Visualization from "./Visualization";
+import Visualization1 from "./Visualization1";
 import "./styles.css";
 import {
   BrowserRouter as Router,
@@ -665,6 +666,9 @@ function App() {
         </Route>
         <Route exact path="/visualization">
           <Visualization tweets={tweets} />
+        </Route>
+        <Route exact path="/visualization1">
+          <Visualization1 tweets={tweets} />
         </Route>
       </Switch>
     </Router>

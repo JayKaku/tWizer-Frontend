@@ -15,6 +15,8 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { Redirect, Link, useHistory } from "react-router-dom";
 
+import "./landing.css";
+
 function LandingPage({ setTweets }) {
   const history = useHistory();
   const [error, setError] = useState({ status: false, msg: "" });
@@ -73,7 +75,7 @@ function LandingPage({ setTweets }) {
 
             // console.log("newdata->", newdata);
 
-            setTweets(newdata);
+            setTweets(res.data);
             history.push("/visualization");
           }
         })
@@ -103,7 +105,7 @@ function LandingPage({ setTweets }) {
 
             // console.log("newdata->", newdata);
 
-            setTweets(newdata);
+            setTweets(res.data);
             history.push("/visualization");
           }
         })
@@ -141,8 +143,24 @@ function LandingPage({ setTweets }) {
         justifyContent="center"
         alignItems="center"
       >
-        <h1>Welcome to tWizer 👋</h1>
-        <h3>Enter the username to search</h3>
+        <br />
+        <h1>tWizer, The Smart Twitter Analyzer.👋</h1>
+
+        <p className="info-text">
+          Hey there! Welcome to tWizer. A tool for powerful and insightful
+          visualizations and analytics for understanding Twitter data's impact
+          at a glance to facilitate brand monitoring, main users around
+          conversations and for measuring campaign hashtag performance. This app
+          scrapes (and never keeps or stores!) the tweets you want to analyze.
+        </p>
+        <br />
+        <p className="info-text">
+          To begin, let's select the type of search you want to conduct. You can
+          either search a twitter handle (e.g. @elonmusk) which will analyse the
+          recent tweets of that user or search a trending hashtag (e.g.
+          #WorkFromHome) to classify sentiments of the tweets regarding it.
+        </p>
+        <h3>Enter the username or hashtag to search</h3>
         <form className="forms" id="contact-form">
           <Box
             // component="form"
